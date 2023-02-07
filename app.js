@@ -8,6 +8,8 @@ const config = require('./config/index')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+var stockRouter = require('./routes/stock')
+
 const errorHandler = require('./middleware/errorHandle')
 const passport = require('passport');
 
@@ -25,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
+app.use("/stock", stockRouter);
 app.use(errorHandler)
 module.exports = app;
