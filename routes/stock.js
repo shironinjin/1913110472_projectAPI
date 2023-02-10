@@ -6,7 +6,9 @@ router.get("/",stockController.stock);
 
 router.post("/",stockController.insert);
 
-router.delete("/:id",stockController.del);
+router.delete("/:id",stockController.des);
+
+router.put("/:id",stockController.update)
 
 
 module.exports = router;
