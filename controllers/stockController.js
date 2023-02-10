@@ -1,16 +1,25 @@
 const Stock = require("../models/stock");
+const Brand = require("../models/brand");
+
 
 exports.stock = async (req, res, next) => {
   const stock = await Stock.find();
-  res.status(200).json({
-    data: stock,
+  return res.status(200).json({
+    stocks: stock,
   });
 };
 
-exports.insert = async (req, res, next) => {
-  const { brand, type, size, color, price } = req.body;
-  const stock = new Stock({
+exports.brand = async (req, res, next) => {
+  const brand = await Brand.find().populate("stocks");
+  return res.status(200).json({
     brand: brand,
+  });
+};
+
+exports.insertStock = async (req, res, next) => {
+  const { type, size, color, price } = req.body;
+  const stock = new Stock({
+    //brand: brand,
     type: type,
     size: size,
     color: color,
@@ -22,10 +31,22 @@ exports.insert = async (req, res, next) => {
   });
 };
 
+/* exports.insertBrand = async (req, res, next) => {
+  const { name } = req.body;
+  const brand = new Brand({
+    name: name,
+  });
+  await brand.save();
+  res.status(200).json({
+    message: "เพิ่มข้อมูลเรียบร้อย",
+  });
+};
+ */
+
 exports.des = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const stock = await Stock.deleteOne({ _id: id, });
+    const stock = await Stock.deleteOne({ _id: id });
 
     if (stock.deletedCount === 0) {
       const error = new Error("ไม่สามารถลบข้อมูลได้");
@@ -64,6 +85,8 @@ exports.update = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
+
+

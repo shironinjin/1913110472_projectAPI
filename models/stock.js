@@ -3,13 +3,18 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema(
   {
-    brand: String,
-    type:String,
-    size:String,
-    color:String,
-    price:Number,
-  },{ collection: "stocks" });
-
+    type: { type: String, require: true, trim: true },
+    size: { type: String },
+    color: { type: String },
+    price: { type: Number },
+    brand: { type: Schema.Types.ObjectId, ref: "Brand" },
+  },
+  {
+    toJSON: { virtuals: true },
+    timestamps: true,
+    collection: "stocks",
+  }
+);
 const stock = mongoose.model("Stock", schema);
 
 module.exports = stock;
