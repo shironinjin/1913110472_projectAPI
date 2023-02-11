@@ -13,22 +13,22 @@ const schema = new Schema(
   {
     timestamps: true,
     toJSON: { virtuals: true },
-    virtuals: {
+   /*  virtuals: {
       stocks: {
         Option: {
-          ref: "Sgtock",
+          ref: "Stock",
           localField: "_id",
           foreignField: "brand",
         },
       },
-    },
+    }, */
   }
 );
-/* schema.virtual("stocks", {
+schema.virtual("stocks", {
   ref: "Stock",
   localField: "_id",
   foreignField: "brand",
-}); */
+});
 
 const brand = mongoose.model("Brand", schema);
 

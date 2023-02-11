@@ -2,24 +2,36 @@ const Stock = require("../models/stock");
 const Brand = require("../models/brand");
 
 
-exports.stock = async (req, res, next) => {
-  const stock = await Stock.find();
-  return res.status(200).json({
-    stocks: stock,
-  });
-};
+
+
+
 
 exports.brand = async (req, res, next) => {
   const brand = await Brand.find().populate("stocks");
-  return res.status(200).json({
+  res.status(200).json({
     brand: brand,
   });
 };
 
+exports.stock = async (req, res, next) => {
+  const { id } = req.params;
+  const bra = await Brand.findById(id);
+  const stock = await Stock.find();
+  if (!bra) {
+    res.status(200).json({
+      message: "eeeee",
+    });
+  }
+  res.status(200).json({
+    stocks: stock,
+  });
+};
+
 exports.insertStock = async (req, res, next) => {
+  const {id} =req.params;
   const { type, size, color, price } = req.body;
   const stock = new Stock({
-    //brand: brand,
+    brand: id,
     type: type,
     size: size,
     color: color,
@@ -30,18 +42,20 @@ exports.insertStock = async (req, res, next) => {
     message: "เพิ่มข้อมูลเรียบร้อย",
   });
 };
-
-/* exports.insertBrand = async (req, res, next) => {
+exports.insertbrand = async (req, res, next) => {
   const { name } = req.body;
-  const brand = new Brand({
-    name: name,
-  });
-  await brand.save();
+  const bra = new Brand()
+  bra.name = name;
+  await bra.save();
   res.status(200).json({
-    message: "เพิ่มข้อมูลเรียบร้อย",
-  });
+    message:"เพิ่มข้อมูลเรียบร้อยแล้ว"
+  })
 };
- */
+
+
+
+
+
 
 exports.des = async (req, res, next) => {
   try {
@@ -61,6 +75,11 @@ exports.des = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+
+
 
 exports.update = async (req, res, next) => {
   try {
@@ -88,5 +107,7 @@ exports.update = async (req, res, next) => {
     next(error);
   }
 };
+
+
 
 

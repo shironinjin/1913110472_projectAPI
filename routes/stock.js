@@ -2,11 +2,12 @@ var express = require("express");
 var router = express.Router();
 const stockController = require("../controllers/stockController");
 
-router.get("/stock", stockController.stock);
-router.get("/brand", stockController.brand);
 
-router.post("/stock", stockController.insertStock);
-/* router.post("/brand", stockController.insertBrand); */
+router.get("/", stockController.brand);
+router.get("/:id", stockController.stock);
+
+router.post("/", stockController.insertbrand);
+router.post("/:id", stockController.insertStock);
 
 router.delete("/:id", stockController.des);
 router.put("/:id", stockController.update);

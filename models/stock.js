@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema(
   {
-    type: { type: String, require: true, trim: true },
+    type: { type: String },
     size: { type: String },
     color: { type: String },
     price: { type: Number },
-    brand: { type: Schema.Types.ObjectId, ref: "Brand" },
+    brand: { type: Schema.Types.ObjectId, ref: "brands" },
   },
   {
     toJSON: { virtuals: true },
