@@ -1,10 +1,6 @@
 const Stock = require("../models/stock");
 const Brand = require("../models/brand");
-
-
-
-
-
+const { validationResult } = require("express-validator");
 
 exports.brand = async (req, res, next) => {
   const brand = await Brand.find().populate("stocks");
@@ -28,35 +24,55 @@ exports.stock = async (req, res, next) => {
 };
 
 exports.insertStock = async (req, res, next) => {
-  const {id} =req.params;
-  const { type, size, color, price } = req.body;
-  const stock = new Stock({
-    brand: id,
-    type: type,
-    size: size,
-    color: color,
-    price: price,
-  });
-  await stock.save();
-  res.status(200).json({
-    message: "เพิ่มข้อมูลเรียบร้อย",
-  });
+  try {
+    const { id } = req.params;
+    const { type, size, color, price } = req.body;
+
+    ///validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("ข้อมูลที่ได้รับมาไม่ถูกต้อง");
+      error.statusCode = 422;
+      error.validation = errors.array();
+      throw error;
+    }
+
+    const stock = new Stock({
+      brand: id,
+      type: type,
+      size: size,
+      color: color,
+      price: price,
+    });
+    await stock.save();
+    res.status(200).json({
+      message: "เพิ่มข้อมูลเรียบร้อย",
+    });
+  } catch (error) {
+    next(error)
+  }
 };
 exports.insertbrand = async (req, res, next) => {
-  const { name } = req.body;
-  const bra = new Brand()
-  bra.name = name;
-  await bra.save();
-  res.status(200).json({
-    message:"เพิ่มข้อมูลเรียบร้อยแล้ว"
-  })
+  try {
+    const { name } = req.body;
+    ///validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("ข้อมูลที่ได้รับมาไม่ถูกต้อง");
+      error.statusCode = 422;
+      error.validation = errors.array();
+      throw error;
+    }
+    const bra = new Brand();
+    bra.name = name;
+    await bra.save();
+    res.status(200).json({
+      message: "เพิ่มข้อมูลเรียบร้อยแล้ว",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
-
-
-
-
-
-
 exports.des = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -76,15 +92,10 @@ exports.des = async (req, res, next) => {
   }
 };
 
-
-
-
-
-
 exports.update = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { brand, type, size, color, price } = req.body;
+    const { type, size, color, price } = req.body;
 
     const stock = await Stock.findOne({ _id: id });
 
@@ -93,7 +104,6 @@ exports.update = async (req, res, next) => {
       error.statusCode = 200;
       throw error;
     } else {
-      stock.brand = brand;
       stock.type = type;
       stock.size = size;
       stock.color = color;
@@ -107,7 +117,3 @@ exports.update = async (req, res, next) => {
     next(error);
   }
 };
-
-
-
-

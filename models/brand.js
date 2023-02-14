@@ -12,16 +12,7 @@ const schema = new Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-   /*  virtuals: {
-      stocks: {
-        Option: {
-          ref: "Stock",
-          localField: "_id",
-          foreignField: "brand",
-        },
-      },
-    }, */
+    toJSON: { virtuals: true }
   }
 );
 schema.virtual("stocks", {
