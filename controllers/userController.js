@@ -4,6 +4,20 @@ const config = require("../config/index");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
+/* exports.user = async (req, res, next) => {
+  const user = await new User.find();
+  res.status(200).json({
+    data: user,
+  });
+}; */
+
+exports.user = async (req, res, next) => {
+  const user = await User.find();
+  res.status(200).json({
+    data: user,
+  });
+};
+
 exports.register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -15,18 +29,23 @@ exports.register = async (req, res, next) => {
       error.validation = errors.array();
       throw error;
     }
-
+    const existEmail = await User.findOne({ email: email });
+    if (existEmail) {
+      const error = new Error("อีเมลนี้มีผู้ใช้งานในระบบแล้ว");
+      error.statusCode = 400;
+      throw error;
+    }
+    
     const user = new User();
     user.name = name;
     user.email = email;
     user.password = await user.pa(password);
-
     await user.save();
     res.status(200).json({
       message: "ลงทะเบียนเรียบร้อยแล้ว",
     });
   } catch (error) {
-    error;
+    next(error);
   }
 };
 
@@ -64,6 +83,7 @@ exports.login = async (req, res, next) => {
       config.JWT_SECRET,
       { expiresIn: "5 days" }
     );
+    
     ///แสดงผล
     const expires_in = jwt.decode(token);
     res.status(200).json({
@@ -75,4 +95,14 @@ exports.login = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+exports.profile = (req, res, next) => {
+  const {role,name,email} = req.user
+  res.status(200).json({ 
+    name:name,
+    email:email,
+    role:role,
+   //user:req.user
+   });
 };

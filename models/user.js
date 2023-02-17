@@ -24,8 +24,6 @@ schema.methods.checkPassword = async function (password) {
   return isValid;
 };
 
-
-
 const user = mongoose.model("User", schema);
 
 module.exports = user;

@@ -15,7 +15,7 @@ exports.stock = async (req, res, next) => {
   const stock = await Stock.find();
   if (!bra) {
     res.status(200).json({
-      message: "eeeee",
+      message: "ไม่พบ",
     });
   }
   res.status(200).json({
@@ -76,9 +76,9 @@ exports.insertbrand = async (req, res, next) => {
 exports.des = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const stock = await Stock.deleteOne({ _id: id });
+    const brand = await Brand.deleteOne({ _id: id });
 
-    if (stock.deletedCount === 0) {
+    if (brand.deletedCount === 0) {
       const error = new Error("ไม่สามารถลบข้อมูลได้");
       error.statusCode = 400;
       throw error;
