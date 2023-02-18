@@ -2,21 +2,28 @@ const Stock = require("../models/stock");
 const Brand = require("../models/brand");
 const { validationResult } = require("express-validator");
 
-// get brand
+// get stock all
 exports.brand = async (req, res, next) => {
-  const brand = await Brand.find().populate("stocks");
+  const brand = await Brand.find().select("name");
+  res.status(200).json({
+    brand: brand,
+  });
+};
+// get login
+exports.brandPR = async (req, res, next) => {
+  const brand = await Brand.find().populate("stocks", ["type","size","color","price"]).select("name");
   res.status(200).json({
     brand: brand,
   });
 };
 
-// get stock
+// get stock id brand
 exports.stock = async (req, res, next) => {
   const { id } = req.params;
-  const bra = await Brand.findById(id).populate("stocks");
+  const bra = await Brand.findById(id).populate("stocks", ["type","size","color","price"]).select("name");
   if (!bra) {
     res.status(200).json({
-      message: "ไม่พบ",
+      message: "ไม่พบสินค้า",
     });
   }
   res.status(200).json({

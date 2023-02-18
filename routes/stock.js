@@ -4,11 +4,11 @@ const stockController = require("../controllers/stockController");
 
 const checkAd = require("../middleware/checkAdmin");
 const passport = require("../middleware/passport");
-
 const { body } = require("express-validator");
 
-router.get("/", stockController.brand);
-router.get("/:id", stockController.stock);
+router.get("/pr",[passport.islogin], stockController.brandPR);
+router.get("/bu", stockController.brand);
+router.get("/:id",[passport.islogin], stockController.stock);
 
 router.post(
   "/", [ passport.islogin, checkAd.isAdmin ],
