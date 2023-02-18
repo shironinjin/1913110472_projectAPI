@@ -3,21 +3,22 @@ var router = express.Router();
 const stockController = require("../controllers/stockController");
 
 const checkAd = require("../middleware/checkAdmin");
-const passport = require('../middleware/passport')
+const passport = require("../middleware/passport");
 
-router.use(express.json());
 const { body } = require("express-validator");
 
 router.get("/", stockController.brand);
 router.get("/:id", stockController.stock);
 
 router.post(
-  "/",[passport.islogin,checkAd.isAdmin],
-  [body("name").not().isEmpty().withMessage("กรุณาป้อนชื่อด้วยค่ะ")],
+  "/", [ passport.islogin, checkAd.isAdmin ],
+  [body("name").not().isEmpty().withMessage("กรุณาป้อนชื่อแบรนด์")],
   stockController.insertbrand
 );
+
 router.post(
-  "/:id",[passport.islogin,checkAd.isAdmin],
+  "/:id",
+  [passport.islogin, checkAd.isAdmin],
   [
     body("type").not().isEmpty().withMessage("กรุณาป้อนประเภทด้วยค่ะ"),
     body("size").not().isEmpty().withMessage("กรุณาป้อนขนาดด้วยค่ะ"),
@@ -27,9 +28,10 @@ router.post(
   stockController.insertStock
 );
 
-router.delete("/:id",[passport.islogin,checkAd.isAdmin], stockController.des);
-router.put("/:id",[passport.islogin,checkAd.isAdmin], stockController.update);
+router.delete("/:id", [passport.islogin, checkAd.isAdmin], stockController.des);
+router.delete("/stock/:id", [passport.islogin, checkAd.isAdmin], stockController.dess);
 
-
+router.put("/:id", [passport.islogin, checkAd.isAdmin], stockController.update);
+router.put("/brand/:id", [passport.islogin, checkAd.isAdmin], stockController.updat);
 
 module.exports = router;
